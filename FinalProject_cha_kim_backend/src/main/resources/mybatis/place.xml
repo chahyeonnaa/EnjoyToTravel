@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.places.model.dao.PlaceDao">
+
+    <resultMap id="placeSimpleDto" type="placeSimpleDto">
+        <id property="contentId" column="contentId" />
+        <result property="contentTypeId" column="contentTypeId" />
+        <result property="firstImage" column="firstimage" />
+        <result property="title" column="title" />
+        <result property="areaCode" column="areacode" />
+        <result property="mapx" column="mapx" />
+        <result property="mapy" column="mapy" />
+        <result property="isAvailableToBlind" column="is_available_to_blind" />
+        <result property="isAvailableToPhysicalDisablity" column="is_available_to_physical_disablity" />
+        <result property="isAvailableToChildren" column="is_available_to_children" />
+        <result property="isAvailableToSenior" column="is_available_to_senior" />
+        <result property="isAvailableToHardOfHearing" column="is_available_to_hard_of_hearing" />
+    </resultMap>
+    
+    <resultMap id="placeDto" type="placeDto">
+        <id property="contentId" column="contentid" />
+        <result property="addr1" column="addr1" />
+        <result property="addr2" column="addr2" />
+        <result property="areaCode" column="areacode" />
+        <result property="bookTour" column="booktour" />
+        <result property="cat1" column="cat1" />
+        <result property="cat2" column="cat2" />
+        <result property="cat3" column="cat3" />
+        <result property="contentTypeId" column="contenttypeid" />
+        <result property="createdTime" column="createdtime" />
+        <result property="firstImage" column="firstimage" />
+        <result property="firstImage2" column="firstimage2" />
+        <result property="cpyrhtDivCd" column="cpyrhtdivcd" />
+        <result property="mapx" column="mapx" />
+        <result property="mapy" column="mapy" />
+        <result property="mlevel" column="mlevel" />
+        <result property="modifiedTime" column="modifiedtime" />
+        <result property="sigunguCode" column="sigungucode" />
+        <result property="tel" column="tel" />
+        <result property="title" column="title" />
+        <result property="zipcode" column="zipcode" />
+        <result property="isAvailableToBlind" column="is_available_to_blind" />
+        <result property="isAvailableToPhysicalDisablity" column="is_available_to_physical_disablity" />
+        <result property="isAvailableToChildren" column="is_available_to_children" />
+        <result property="isAvailableToSenior" column="is_available_to_senior" />
+        <result property="isAvailableToHardOfHearing" column="is_available_to_hard_of_hearing" />
+    </resultMap>
+    
+    <resultMap id="barrierFreeDto" type="barrierFreeDto">
+        <id property="contentId" column="contentid" />
+        <result property="parking" column="parking" />
+        <result property="route" column="route" />
+        <result property="publicTransport" column="publictransport" />
+        <result property="ticketOffice" column="ticketoffice" />
+        <result property="promotion" column="promotion" />
+        <result property="wheelchair" column="wheelchair" />
+        <result property="exits" column="exits" />
+        <result property="elevator" column="elevator" />
+        <result property="restroom" column="restroom" />
+        <result property="auditorium" column="auditorium" />
+        <result property="room" column="room" />
+        <result property="handicapEtc" column="handicapetc" />
+        <result property="braileBlock" column="braileblock" />
+        <result property="helpDog" column="helpdog" />
+        <result property="guideHuman" column="guidehuman" />
+        <result property="audioGuide" column="audioguide" />
+        <result property="bigPrint" column="bigprint" />
+        <result property="brailePromotion" column="brailepromotion" />
+        <result property="guideSystem" column="guidesystem" />
+        <result property="blindHandicapEtc" column="blindhandicapetc" />
+        <result property="signGuide" column="signguide" />
+        <result property="videoGuide" column="videoguide" />
+        <result property="hearingRoom" column="hearingroom" />
+        <result property="hearingHandicapEtc" column="hearinghandicapetc" />
+        <result property="stroller" column="stroller" />
+        <result property="lactationRoom" column="lactationroom" />
+        <result property="babySpareChair" column="babysparechair" />
+        <result property="infantsFamilyEtc" column="infantsfamilyetc" />
+    </resultMap>   
+    
+    <resultMap id="placeOperationInfoDto" type="placeOperationInfoDto">
+		<id property="contentId" column="contentid" />
+	    <result property="contentTypeId" column="contenttypeid" />
+	    <result property="scale" column="scale" />
+	    <result property="useFee" column="usefee" />
+	    <result property="discountInfo" column="discountinfo" />
+	    <result property="spendTime" column="spendtime" />
+	    <result property="parkingFee" column="parkingfee" />
+	    <result property="infoCenterCulture" column="infocenterculture" />
+	    <result property="accomCountCulture" column="accomcountculture" />
+	    <result property="useTimeCulture" column="usetimeculture" />
+	    <result property="restDateCulture" column="restdateculture" />
+	    <result property="parkingCulture" column="parkingculture" />
+	    <result property="chkBabyCarriageCulture" column="chkbabycarriageculture" />
+	    <result property="chkPetCulture" column="chkpetculture" />
+	    <result property="chkCreditCardCulture" column="chkcreditcardculture" />
+    </resultMap>    
+
+	 <select id="listPlaces" parameterType="java.util.Map" resultMap="placeSimpleDto">
+        SELECT 
+            contentId, contentTypeId, firstimage, title, areacode, sigungucode, mapx, mapy, is_available_to_blind, 
+            is_available_to_physical_disablity , is_available_to_children, is_available_to_senior, is_available_to_hard_of_hearing
+        FROM places
+        WHERE areacode = #{areaCode} 
+	    AND sigungucode = #{sigunguCode}
+	    <choose>
+	        <when test="contentTypeId == '32' or contentTypeId == '39'">
+	            AND contenttypeid = #{contentTypeId}
+	        </when>
+	        <otherwise>
+	            AND contenttypeid IN ('12', '14', '15', '28', '38')
+	        </otherwise>
+	    </choose>
+	    <choose>
+	        <when test="barrierType == 1">
+	            AND is_available_to_physical_disablity = 1
+	        </when>
+	        <when test="barrierType == 2">
+	            AND is_available_to_blind = 1
+	        </when>
+	        <when test="barrierType == 3">
+	            AND is_available_to_hard_of_hearing = 1
+	        </when>
+	        <when test="barrierType == 4">
+	            AND is_available_to_children = 1
+	        </when>
+	        <when test="barrierType == 5">
+	            AND is_available_to_senior = 1
+	        </when>
+	    </choose>
+	     <choose>
+	        <when test="inputKeyword != null and inputKeyword != ''">
+	            AND title LIKE CONCAT('%', #{inputKeyword}, '%')
+	        </when>
+	    </choose>
+    </select>
+
+	 <select id="listPlacesOfPlaceCard" parameterType="java.util.Map" resultMap="placeSimpleDto">
+        SELECT 
+            contentId, contentTypeId, firstimage, title, areacode, sigungucode, mapx, mapy, is_available_to_blind, 
+            is_available_to_physical_disablity , is_available_to_children, is_available_to_senior, is_available_to_hard_of_hearing
+        FROM places
+        WHERE areacode = #{areaCode} 
+	    AND sigungucode = #{sigunguCode}
+	    <choose>
+	        <when test="contentTypeId == '32' or contentTypeId == '39'">
+	            AND contenttypeid = #{contentTypeId}
+	        </when>
+	        <otherwise>
+	            AND contenttypeid IN ('12', '14', '15', '28', '38')
+	        </otherwise>
+	    </choose>
+	     <choose>
+	        <when test="inputKeyword != null and inputKeyword != ''">
+	            AND title LIKE CONCAT('%', #{inputKeyword}, '%')
+	        </when>
+	    </choose>
+    </select>
+    
+    <select id="getPlaceById" parameterType="String" resultMap="placeDto">
+        SELECT *
+        FROM places
+        WHERE contentId = #{contentId}
+    </select>
+
+    <select id="getBarrierFreeInfoById" parameterType="String" resultMap="barrierFreeDto">
+        SELECT * 
+        FROM barrierfreeinfo
+        WHERE contentid = #{contentId}
+    </select>
+
+    <select id="getPlaceOperationInfoById" parameterType="String" resultMap="placeOperationInfoDto">
+        SELECT * 
+        FROM places_operation_info
+        WHERE contentid = #{contentId}
+    </select>
+    
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.area.model.dao.AreaDao">
+
+	<resultMap id="sidoDto" type="sidoDto">
+        <id property="sidoCode" column="sido_code"/>
+        <result property="sidoName" column="sido_name"/>
+    </resultMap>
+
+    <resultMap id="gugunDto" type="gugunDto">
+        <id property="gugunCode" column="gugun_code"/>
+        <result property="gugunName" column="gugun_name"/>
+        <result property="sidoCode" column="sido_code"/>
+    </resultMap>
+
+    <select id="getAllSido" resultMap="sidoDto">
+        SELECT * FROM sido;
+    </select>
+    
+    <select id="getGugunBySidoCode" parameterType="string" resultMap="gugunDto">
+        SELECT * FROM gugun WHERE sido_code = #{sidoCode};
+    </select>
+
+</mapper>

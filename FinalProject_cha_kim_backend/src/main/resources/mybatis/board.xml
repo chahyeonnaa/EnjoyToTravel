@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<!-- article_no int AI PK 
+user_id int 
+writer varchar(255) 
+subject varchar(255) 
+content varchar(1023) 
+hit int 
+register_time timestamp -->
+
+<mapper namespace="com.ssafy.board.model.dao.BoardDao">
+	
+	<resultMap type="BoardDto" id="article">
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="writer" property="writer"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<sql id="search">
+	<where>
+	
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and ${key} = #{word}
+			</if>
+		</if>
+	</where>
+	</sql>
+	
+	<select id="listArticle" parameterType="map" resultMap="article">
+		select article_no, user_id, writer, subject, content, hit, register_time
+		from board 
+		<include refid="search"></include>
+		order by article_no desc
+		limit #{start}, #{listsize}
+	</select>
+	
+	<select id="getTotalArticleCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from board
+			<include refid="search"></include>
+	</select>
+	
+	<insert id="writeArticle" parameterType="boardDto">
+		insert into board (user_id, writer, subject, content, hit, register_time)
+		values (#{userId}, #{writer}, #{subject}, #{content}, 0, now())
+	</insert>
+	
+	
+	<select id="getArticle" parameterType="integer" resultMap="article">
+		select article_no, user_id, writer, subject, content, hit, register_time
+		from board where article_no = #{number}
+		
+	</select>
+	
+	<update id="updateHit" parameterType="integer">
+		update board set hit = hit+1 where article_no = #{number}
+	</update>
+	
+	
+	<update id="modifyArticle" parameterType="boardDto">
+		update board set subject=#{subject}, content=#{content} where article_no=#{articleNo}
+	</update>
+	
+	
+	<delete id="deleteArticle" parameterType="integer">
+		delete from board where article_no=#{articleNo}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.course.model.dao.CourseDao">
+
+    <resultMap id="courseCardDto" type="courseCardDto">
+        <id property="cardId" column="card_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="contentId" column="contentid"/>
+        <result property="contentTypeId" column="contenttypeid"/>
+        <result property="text" column="text"/>
+        <result property="placeTitle" column="place_title"/>
+        <result property="firstImage" column="firstImage"/>
+        <result property="keyword01" column="keyword01"/>
+        <result property="keyword02" column="keyword02"/>
+        <result property="keyword03" column="keyword03"/>
+        <result property="keyword04" column="keyword04"/>
+        <result property="keyword05" column="keyword05"/>
+        <result property="keyword06" column="keyword06"/>
+        <result property="keyword07" column="keyword07"/>
+        <result property="keyword08" column="keyword08"/>
+        <result property="keyword09" column="keyword09"/>
+        <result property="keyword10" column="keyword10"/>
+        <result property="keyword11" column="keyword11"/>
+        <result property="keyword12" column="keyword12"/>
+    </resultMap>
+
+    <resultMap id="courseDto" type="courseDto">
+        <id property="courseId" column="course_id"/>
+        <result property="userId" column="userid"/>
+        <result property="title" column="title"/>
+        <result property="tripDate" column="trip_date"/>
+        <result property="tag" column="tag"/>
+        <result property="sidoCode" column="sido_code"/>
+        <result property="gugunCode" column="gugun_code"/>
+        <result property="createdAt" column="created_at"/>
+        <collection property="courseCards" ofType="courseCardDto" resultMap="courseCardDto" column="course_id" javaType="ArrayList"/>
+    </resultMap>
+
+    <select id="getAllCourses" resultMap="courseDto">
+        SELECT 
+            c.course_id, c.userid, c.title, c.trip_date, c.tag, c.sido_code, c.gugun_code, c.created_at,
+            cc.card_id, cc.contentid, cc.contenttypeid, cc.text, cc.place_title, cc.firstimage, cc.keyword01, cc.keyword02, cc.keyword03, cc.keyword04,
+            cc.keyword05, cc.keyword06, cc.keyword07, cc.keyword08, cc.keyword09, cc.keyword10,
+            cc.keyword11, cc.keyword12
+        FROM course c
+        LEFT JOIN course_card cc ON c.course_id = cc.course_id
+    </select>
+
+    <select id="getCourseById" parameterType="int" resultMap="courseDto">
+        SELECT 
+            c.course_id, c.userid, c.title, c.trip_date, c.tag, c.sido_code, c.gugun_code, c.created_at,
+            cc.card_id, cc.contentid, cc.contenttypeid, cc.text, cc.place_title, cc.firstimage, cc.keyword01, cc.keyword02, cc.keyword03, cc.keyword04,
+            cc.keyword05, cc.keyword06, cc.keyword07, cc.keyword08, cc.keyword09, cc.keyword10,
+            cc.keyword11, cc.keyword12
+        FROM course c
+        LEFT JOIN course_card cc ON c.course_id = cc.course_id
+        WHERE c.course_id = #{courseId}
+    </select>
+    
+    <insert id="insertCourse" parameterType="CourseInputDto" useGeneratedKeys="true" keyProperty="courseId">
+        INSERT INTO Course (userId, title, trip_date, tag, sido_code, gugun_code)
+        VALUES (#{userId}, #{title}, #{tripDate}, #{tag}, #{sidoCode}, #{gugunCode})
+    </insert>
+
+    <!-- Insert into CourseCard table -->
+    <insert id="insertCourseCard" parameterType="CourseCardInputDto">
+        INSERT INTO Course_Card (course_id, contentid, contenttypeid, text, place_title, firstimage, keyword01, keyword02, keyword03, keyword04,
+                                keyword05, keyword06, keyword07, keyword08, keyword09, keyword10, keyword11, keyword12)
+        VALUES (#{courseId}, #{contentId}, #{contentTypeId}, #{text}, #{placeTitle}, #{firstImage}, #{keyword01}, #{keyword02}, #{keyword03}, #{keyword04},
+                #{keyword05}, #{keyword06}, #{keyword07}, #{keyword08}, #{keyword09}, #{keyword10}, #{keyword11}, #{keyword12})
+    </insert>
+    
+     
+</mapper>
